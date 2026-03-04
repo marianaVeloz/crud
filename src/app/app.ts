@@ -16,7 +16,7 @@ export class App {
   nuevaTarea: string = '';
 
   constructor(private postService: PostService) {}
- 
+
   // Método GET
   verTareas() {
    this.postService.getTareas().subscribe({
@@ -42,11 +42,27 @@ export class App {
     });
   }
 
-  
+
   // Método DELETE
   eliminarTarea(id: string) {
     this.postService.eliminarTarea(id).subscribe(() => {
       this.verTareas();
     });
+  }
+
+  // Método PUT
+  actualizarTarea(tarea: Tarea) {
+    const tareaActualizada: Tarea = {
+      descripcion: tarea.descripcion
+    };
+
+    this.postService.actualizarTarea(tarea._id!, tareaActualizada)
+      .subscribe({
+        next: () => this.verTareas(),
+        error: (err) => console.error('Error al actualizar tarea:', err)
+      });
+  }
+  test() {
+    alert("FUNCIONA");
   }
 }

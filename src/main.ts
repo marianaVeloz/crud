@@ -1,8 +1,9 @@
-import { ApplicationConfig } from '@angular/core';
-import { provideHttpClient } from '@angular/common/http';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { App } from './app/app';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 
-export const appConfig: ApplicationConfig = {
+bootstrapApplication(App, {
   providers: [
-    provideHttpClient()
+    provideHttpClient(withFetch())
   ]
-};
+});
