@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import { PostService, Tarea } from './post.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -10,23 +10,22 @@ import { CommonModule } from '@angular/common';
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
-export class App implements OnInit {
+export class App {
 
   tareas: Tarea[] = [];
   nuevaTarea: string = '';
 
   constructor(private postService: PostService) {}
-
-  ngOnInit() {
-    this.cargarTareas();
-  }
-
-  cargarTareas() {
-    this.postService.getTareas().subscribe(data => {
-      this.tareas = data;
+ 
+  // Método GET
+  verTareas() {
+   this.postService.getTareas().subscribe({
+      next: (res) => this.tareas = res,
+      error: (err) => console.error('Error al obtener tareas:', err)
     });
   }
 
+  // Método POST
   agregarTarea() {
     if (!this.nuevaTarea.trim()) return;
 
@@ -34,15 +33,20 @@ export class App implements OnInit {
       descripcion: this.nuevaTarea
     };
 
-    this.postService.crearTarea(tarea).subscribe(() => {
-      this.nuevaTarea = '';
-      this.cargarTareas();
+    this.postService.crearTarea(tarea).subscribe({
+      next: () => {
+        this.nuevaTarea = '';
+        this.verTareas();
+      },
+      error: (err) => console.error('Error al crear tarea:', err)
     });
   }
 
+  
+  // Método DELETE
   eliminarTarea(id: string) {
     this.postService.eliminarTarea(id).subscribe(() => {
-      this.cargarTareas();
+      this.verTareas();
     });
   }
 }
